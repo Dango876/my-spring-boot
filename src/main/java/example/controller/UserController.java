@@ -1,7 +1,5 @@
 package example.controller;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,35 +20,39 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String ShowAllUser(Model model) {
-        List<User> allUsers = userService.getAllUsers();
-        model.addAttribute("users", allUsers);
+    public String showAllUser(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
         return "users";
     }
 
     @GetMapping("/add")
-    public String addUser(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
+    public String showAddFrom(Model model) {
+        model.addAttribute("user", new User());
         return "user-edit";
     }
 
-    @PostMapping("/save")
-    public String createOrUpdateUser(@ModelAttribute User user) {
-        userService.saveUser(user);
+    @PostMapping("/add")
+    public String createUser(@ModelAttribute User user) {
+        userService.createUser(user);
         return "redirect:/";
     }
 
     @GetMapping("/edit/{id}")
-    public String editUser(@PathVariable(value = "id") Long id, Model model) {
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
+    public String showEditFrom(@PathVariable Long id, Model model) {
+        model.addAttribute("user", userService.getUserById(id));
         return "user-edit";
     }
 
-    @GetMapping(value = "/delete/{id}")
+    @PostMapping("/edit/{id}")
+    public String updateUser(@PathVariable(value = "id") Long id, @ModelAttribute User user) {
+        user.setId(id);
+        userService.createUser(user);
+        return "redirect:/";
+    }
+
+    @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
-        userService.delete(id);
+        userService.deleteUser(id);
         return "redirect:/";
     }
 

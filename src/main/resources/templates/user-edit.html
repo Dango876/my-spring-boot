@@ -9,7 +9,8 @@
 <div class="container mt-4">
     <h2 th:text="${user.id} ? 'Edit User' : 'Add New User'">User Form</h2>
 
-    <form th:action="@{/save}" th:object="${user}" method="post">
+    <form th:action="${user.id != null} ? @{/edit/{id}(id=${user.id})} : @{/add}"
+          th:object="${user}" method="post">
         <input type="hidden" th:field="*{id}"/>
 
         <div class="mb-3">
